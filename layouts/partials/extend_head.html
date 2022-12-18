@@ -1,4 +1,4 @@
-{{- $scss := resources.Get "assets/css/extend/main.scss" -}}
+{{- $scss := resources.Get "assets/css/main.scss" -}}
 {{- $stylesheet := $scss | resources.ToCSS -}}
 
 {{- if not site.Params.assets.disableFingerprinting -}}
