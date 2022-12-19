@@ -2,7 +2,7 @@
 date: 2022-12-18 18:48:30 +0900
 title: TeamViewer 싫어, RustDesk 좋아!
 categories: [ computer ]
-tags: [ remote-desktop, rdp, teamviewer, rustdesk, docker, 100DaysToOffload ]
+tags: [ todo, remote-desktop, rdp, teamviewer, rustdesk, docker, 100DaysToOffload ]
 ---
 
 외부에서 우리집 윈도우에 접속하기 위해 RDP 를 사용하고 있었는데 꽤 많은 문제가 있었다.

@@ -2,7 +2,7 @@
 date: 2022-12-15 18:16:42 +0900
 title: Git 원격 저장소에 커밋된 파일 기록 지우기
 categories: [ computer ]
-tags: [ git, image, metadata, exif, git-filter-repo, bfg, 100DaysToOffload ]
+tags: [ todo, git, image, metadata, exif, git-filter-repo, bfg, 100DaysToOffload ]
 ---
 [처음으로 블로그에 쓴 글]({{< ref "/posts/2022-12-07-블로그" >}})에 실수를 했다.
 
