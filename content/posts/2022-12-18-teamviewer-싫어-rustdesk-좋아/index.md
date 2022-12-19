@@ -3,6 +3,8 @@ date: 2022-12-18 18:48:30 +0900
 title: TeamViewer 싫어, RustDesk 좋아!
 categories: [ computer ]
 tags: [ todo, remote-desktop, rdp, teamviewer, rustdesk, docker, 100DaysToOffload ]
+
+ShowToc: true
 ---
 
 외부에서 우리집 윈도우에 접속하기 위해 RDP 를 사용하고 있었는데 꽤 많은 문제가 있었다.
@@ -33,19 +35,22 @@ RustDesk 는 TeamViewer 와 비슷한 서버-클라이언트 구조를 가진 �
 
 
 ### 포트 열기
+따로 설정하지 않았다면 `hbbs`는 21115 (TCP), 21116 (TCP/UDP) 그리고 21118(TCP) 포트를 사용하고 `hbbr` 은 21117 (TCP) 와 21119 (TCP) 를 사용한다.
 
-따로 설정하지 않았다면 `hbbs`는 21115 (TCP), 21116 (TCP/UDP) 그리고 21118(TCP) 포트를 사용하고 `hbbr` 은 21117 (TCP) 와 21119 (TCP) 를 사용한다. 
+포트와 관련된 코드는 [`rustdesk/rustdesk-server`](https://github.com/rustdesk/rustdesk-server) 저장소의 [`/src/utils.rs` 파일](https://github.com/rustdesk/rustdesk-server/blob/85af668a4f746a8138cbc0d26e2eba66ab95cfa0/src/utils.rs#L113-L119)에서 확인할 수 있다.
 
-- `21115/TCP`
-  NAT 종류 테스트
-- `21116/TCP`  
-  [TCP hole punching](https://en.wikipedia.org/wiki/TCP_hole_punching) 및 서비스 연결
-- `21117/TCP`  
-  릴레이 서비스
-- `21116/UDP`  
-  ID 등록 및 Heartbeat (서비스가 정상적으로 동작하고 있는지 검사)
-- `21118-21119/TCP`  
-  웹 클라이언트 연결, 사용할 필요가 없다면 열어두지 않아도 괜찮음
+- `21115/TCP` NAT 종류 테스트
+- `21116/TCP` [TCP hole punching](https://en.wikipedia.org/wiki/TCP_hole_punching) 및 서비스 연결
+- `21117/TCP` 릴레이 서비스
+- `21116/UDP` ID 등록 및 Heartbeat
+- `21118-21119/TCP` 웹 클라이언트 연결 (사용하지 않는다면 닫아도 괜찮음)
+
+#### API
+공식 문서에 적혀있지 않는 포트 사용이 확인됐다. 나중을 위한 포트[^21114-tcp-port-for-future-use]라는 답변을 이슈에서 찾았는데 실제로는 현 버전에서 API 와 관련된 웹 포트로 사용하고 있었다.
+
+[^21114-tcp-port-for-future-use]: <https://github.com/rustdesk/rustdesk/issues/518#issuecomment-1126774740>
+
+해당 포트는 `PORT_FOR_API` 환경 변수로 수정할 수 있다. 클라이언트는... 잘 모르겠다.
 
 
 #### 공유기 포트포워딩
@@ -138,7 +143,7 @@ interface4 enp2s0 lan
 
 
 #### 폴더 구조
-서비스를 정상적으로 실행하면 아래와 같은 디렉터리 구조로 파일이 생성된다.
+서비스가 정상적으로 실행됐다면 아래와 같은 폴더 구조와 파일이 생성된다.
 
 
 ```
@@ -158,11 +163,11 @@ drwxr-xr-x - aeon 12-18 19:34 hbbs
 ```
 
 
-#### 공개 키
+### 공개 키
 다른 사용자(단말기)가 내 서버를 사용하기 위해선 `hbbs` 의 작업 디렉터리 속에 자동으로 생성된 `id_ed25519.pub` 파일 속 인코딩된 공개 키 문자열이 필요하다.
 
 
-##### 공개 키 사용 안하기
+#### 공개 키 사용 안하기
 `hbbs` 와 `hbbr` 를  `-k _` 인자와 함께 실행하면 공개 키 인증을 사용하지 않는다.
 
 
@@ -172,7 +177,9 @@ drwxr-xr-x - aeon 12-18 19:34 hbbs
 [^rustdesk-android-client-from-github-release]: GitHub 릴리즈 탭에서도 APK 파일을 받을 수 있다: <https://github.com/rustdesk/rustdesk/releases>
 [^rustdesk-android-client-from-google-play]: 추천하진 않지만 구글 플레이서도 받을 순 있다: <https://play.google.com/store/apps/details?id=com.carriez.flutter_hbb>
 
-나는 윈도우 환경에서 사용할 수 있는 CLI 패키지 매니저인 [`scoop`](https://github.com/ScoopInstaller/Scoop) 의 포크, [`shovel`](https://github.com/Ash258/Scoop-Core) 를 사용해 설치했다.
+
+### Windows
+윈도우 환경에서 사용할 수 있는 CLI 패키지 매니저인 [`scoop`](https://github.com/ScoopInstaller/Scoop) 의 포크, [`shovel`](https://github.com/Ash258/Scoop-Core) 를 사용해 설치했다.
 
 ```
 PowerShell 7.3.0
@@ -208,5 +215,29 @@ Creating shortcut for RustDesk (RustDesk.exe)
 ~ took 3s
 ```
 
+
+### Linux
+작업용 노트북에 설치된 아치 리눅스에선 AUR[^aur-rustdesk][^aur-rustdesk-bin] 를 통해 쉽게 설치할 수 있었다. 다만 내 노트북에선 Wayland 컴포지터인 [`sway`](https://github.com/swaywm/sway) 를 사용하고 있는데 RustDesk 는 Wayland 를 완벽히 지원하지 않는다.
+
+[^aur-rustdesk]: <https://aur.archlinux.org/packages/rustdesk>
+[^aur-rustdesk-bin]: <https://aur.archlinux.org/packages/rustdesk-bin>
+
+
+#### Wayland
+다행히 메인테이너가 이 문제를 인지하고 있고 현재 작업 중[^wayland-support-issue]이다. 완벽하진 않으나 나이틀리 빌드[^nightly-release][^aur-rustdesk-nightly]에선 어느정도 지원하는 것을 확인할 수 있었다. 다른 원격 장치에 접속했을 때 키보드 입력이 안되는 문제는 해결됐으나 원격 데스크톱은 여전히 열리지 않는다.
+
+[^nightly-release]: <https://github.com/rustdesk/rustdesk/releases/tag/nightly>
+[^aur-rustdesk-nightly]: <https://aur.archlinux.org/packages/rustdesk-nightly>
+[^wayland-support-issue]: <https://github.com/rustdesk/rustdesk/issues/56>
+
 ## 사용 후기
-*TODO: 사용해보고 작성할 예정*
+- 아직 Wayland 를 지원하지 않음
+- 일반 사용자의 오류 보고가 쉽지 않음, 특히 클라이언트는 사실상 불가능함[^logging-with-env-variable]
+- 공식 문서의 많은 부분이 현 버전과 차이가 있고 뭔가 많이 빠져있음
+- 구현 안된 기능이 많고 버그도 산더미인데 벌써부터 유료 버전을 생각하고 있음[^pro-version]
+- RDP 나 Chrome Remote Deskop 등 다른 원격 데스크톱 소프트웨어 대비 압축 관계 없음 화질과 속도 모두 나쁨
+
+[^logging-with-env-variable]: <https://github.com/rustdesk/rustdesk/issues/515#issuecomment-1126688734>
+[^pro-version]: <https://github.com/rustdesk/rustdesk/issues/509#issuecomment-1125744953>
+
+*TODO: 지속적으로 작성할 예정*
