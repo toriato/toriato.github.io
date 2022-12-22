@@ -230,6 +230,7 @@ Creating shortcut for RustDesk (RustDesk.exe)
 [^aur-rustdesk-nightly]: <https://aur.archlinux.org/packages/rustdesk-nightly>
 [^wayland-support-issue]: <https://github.com/rustdesk/rustdesk/issues/56>
 
+
 ## 사용 후기
 - 아직 Wayland 를 지원하지 않음
 - 일반 사용자의 오류 보고가 쉽지 않음, 특히 클라이언트는 사실상 불가능함[^logging-with-env-variable]
