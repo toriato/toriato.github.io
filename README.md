@@ -1,5 +1,16 @@
+# 🥞
+
+***contacts***
+- discord `aeon#4285`
+- [steam](https://steamcommunity.com/id/meltincat/)
+- [dcinside gallery](https://gall.dcinside.com/mini/owo) or [guestbook](https://gallog.dcinside.com/springkat/guestbook)
+
+***the things i likes***
+- computer in general
+- cat and other cute animals 😺
+
 <details>
-<summary><em>fun facts about me</em></summary>
+<summary><strong><em>fun facts about me</em></strong></summary>
 
 my github profile is a meme itself  
 my codes are useless.
@@ -16,11 +27,5 @@ also don't worry, i'm not gonna die for at least 10 years.
 i'm really sorry for being a depressed af...
   
 *now, back to fun story!*
-  
----
-  
-</details>
 
-the things i likes:
-- computer in general
-- cat and other cute animals 😺
+</details>
